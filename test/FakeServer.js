@@ -311,6 +311,12 @@ FakeConnection.prototype._parsePacket = function _parsePacket(packetHeader) {
         this._handleQueryPacket(packet);
       }
       break;
+    case Packets.ComInitDbPacket:
+      if (!this.emit('init_db', packet)) {
+        this._sendPacket(new Packets.OkPacket());
+        this._parser.resetPacketNumber();
+      }
+      break;
     case Packets.ComPingPacket:
       if (!this.emit('ping', packet)) {
         this.ok();
@@ -366,6 +372,7 @@ FakeConnection.prototype._determinePacket = function _determinePacket(packetHead
   var firstByte = this._parser.peak();
   switch (firstByte) {
     case 0x01: return Packets.ComQuitPacket;
+    case 0x02: return Packets.ComInitDbPacket;
     case 0x03: return Packets.ComQueryPacket;
     case 0x0e: return Packets.ComPingPacket;
     case 0x11: return Packets.ComChangeUserPacket;
