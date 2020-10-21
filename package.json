@@ -29,6 +29,7 @@
   },
   "files": [
     "lib/",
+    "test",
     "Changes.md",
     "License",
     "Readme.md",
